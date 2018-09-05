@@ -1,2 +1,15 @@
 这是一个巡检系统，用来检查各个项目下的服务器的配置，参数，或者其他你查询到的数据都可以丢进去
-![image](https://github.com/JessicaWon/check/raw/master/巡检_1.png)
+###功能介绍
+```
+主要是用来定时巡视需要的参数，比如CPU，磁盘等系统信息，PHP，MYSQL等组件版本信息，以及其它优化后的信息等。
+```
+###用什么来完成的？
+```
+前端展示：grafana+flask+echart（对，就是百度开源那个）
+数据存储：elasticsearch
+数据入库：filebeat+logstash
+```
+###数据准备
+```
+数据格式为json数据格式，在logstash中使用json插件入库，通过匹配docker，非docker来进入不同的索引
+```
