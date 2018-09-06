@@ -1,6 +1,6 @@
 #coding:utf-8
-# 这个用于制作多张bar图表在一张图表的,ESIP这个地方实际上是部署的es服务器的地址
-##密码等敏感信息是抹去的，请在对应的地方添加
+## 这个用于制作多张bar图表在一张图表的,ESIP这个地方实际上是部署的es服务器的地址
+## 密码等敏感信息是抹去的，请在对应的地方添加。
 from flask import Flask,render_template,url_for
 from elasticsearch import Elasticsearch
 import json, datetime, ConfigParser
