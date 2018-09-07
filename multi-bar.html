@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="echarts.min.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+app.title = '堆叠条形图';
+
+var data_list = {{result_json|safe }};
+var zu = {{result_array|safe }};
+result_array = zu
+var array_len = {{array_len|safe }};
+var xAxis_array = new Array();
+var yAxis_array = new Array();
+var grid_array = new Array();
+var series_array = [];
+
+for (var i = 0; i < array_len; i ++){
+
+       _x_left = 0;
+       if (array_len > 12){
+           row_length = 0.25;
+           row = 4;
+           _width = '15%';
+           _height = '6%';
+       }else if(array_len < 3){
+           _x_left = 0.15;
+           row_length = 0.4;
+           row = 2;
+           _width = '20%';
+           _height = '12%';
+       }
+       else {
+           row = 3;
+           row_length = 0.35;
+           _width = '20%';
+           _height = '12%';
+       }
+
+       all_data_line = Math.ceil(array_len/row);
+       _line = Math.ceil(i/row);
+       _row = i%row ;
+
+       if (all_data_line != 0){
+           line_length = 0.9/all_data_line;
+       }else{
+           line_length = 0.2;
+       }
+
+       if (_row > 0){
+           _line = _line - 1;
+       }
+       _left = line_length*0.5
+       if (array_len > 14){
+           _left = line_length*0.8
+       }
+
+       //x_line = (0.222*100).toFixed(0) + '%';
+       x_line = Math.round((_x_left + 0.05 + row_length*_row) * 10000) / 100.00 + "%"
+       y_line = Math.round((_left + _line*line_length) * 10000) / 100.00 + "%"
+
+       console.log("x_line",x_line,"y_line",y_line);
+       grid_single_item = {
+         x: x_line,
+         y: y_line  ,
+         width: _width,
+         height: _height,
+         containLabel: false
+       }
+       grid_array.push(grid_single_item);
+       console.log(grid_single_item,"grid_single_item");
+}
+
+for (var i = 0; i < array_len; i ++) {
+        x_single_item = {
+          gridIndex: i,
+          splitNumber: 4,
+          splitLine: {
+            show: false,
+          }
+        }
+        //console.log("单条数据及单条数据的类型",x_single_item,typeof(x_single_item))
+        xAxis_array.push(x_single_item);
+
+
+        y_single_item = {
+           name: result_array[i],
+           gridIndex: i,
+           axisLabel: {
+             interval: 0,
+             color: '#00C5CD',
+           },
+           data: data_list[result_array[i]]["version"],
+        }
+        yAxis_array.push(y_single_item);
+
+        s_single_item = {
+          name: result_array[i],
+          type: 'bar',
+          xAxisIndex: i,
+          yAxisIndex: i,
+          data: data_list[result_array[i]]["data"],
+          barMaxWidth: 20,
+          label: {
+            show: true,
+            position: 'right',
+            align: 'left',
+          },
+        }
+        console.log("单条series数据及单条数据的类型",s_single_item,typeof(s_single_item),typeof(series_array))
+        series_array.push(s_single_item);
+        //series_array[0] = series_array[0]+","+s_single_item; //貌似不行，直接用拼接字符串的做法
+}
+//console.log(xAxis_array)
+//console.log(yAxis_array)
+//console.log(series_array)
+
+
+     xAxis_a = [{
+         ridIndex: 0,
+         splitNumber: 4,
+         splitLine: {
+             show: false
+         }
+     }, {
+         gridIndex: 1,
+         splitNumber: 4,
+         splitLine: {
+             show: false
+         }
+     }, {
+         gridIndex: 2,
+         splitNumber: 4,
+         splitLine: {
+             show: false
+         }
+     }];
+
+     grid_a = [{
+         x: '5%',
+         y: '20%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     }, {
+         x: '40%',
+         y: '20%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     }, {
+         x: '75%',
+         y: '20%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     },{
+         x: '5%',
+         y: '60%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     },{
+         x: '40%',
+         y: '60%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     },{
+         x: '75%',
+         y: '60%',
+         width: '20%',
+         height: '15%',
+         containLabel: false
+     }];
+
+var legenddData = {};
+
+option = {
+    ///////title开始////////
+    title: [
+    ],
+
+    ////grid开始/////
+    //grid: grid_a,
+    grid: grid_array,
+    ////xAxis的刻度展示设置开始,splitLine重要，需要用这个来刻画刻度/////
+    //xAxis: xAxis_a,
+    //xAxis: [xAxis_array[0],xAxis_array[1],xAxis_array[2]],
+    xAxis: xAxis_array,
+
+    ////yAxis开始,axisLabel这个还是有必要的，因为在显示的过程中的颜色/////
+    //yAxis: yAxis_a,
+    //yAxis: [yAxis_array[0],yAxis_array[1],yAxis_array[2]],
+    yAxis: yAxis_array,
+
+    tooltip: {
+        formatter: function(parmes) {
+            return parmes.name + ":" + parmes.value;
+        }
+    },
+    legend: {
+        data: zu,
+        selected: legenddData
+    },
+
+    //series: series_a,
+    //series: [series_array[0],series_array[1],series_array[2]],
+    series: series_array,
+};
+
+console.log("xAxis_array",xAxis_array,typeof(xAxis_array))
+console.log("xAxis",xAxis_a,typeof(xAxis_a))
+console.log("yAxis_array",yAxis_array,typeof(yAxis_array))
+console.log("yAxis",yAxis_a,typeof(yAxis_a))
+console.log("series_array",series_array,typeof(series_array))
+console.log("series",series_a,typeof(series_a))
+console.log("grid_a",grid_a,typeof(grid_a))
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
+</html>
