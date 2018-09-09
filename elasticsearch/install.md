@@ -35,8 +35,8 @@ index.max_result_window: 1000000000
 #path.data: {{dataDirs}}
 #path.logs: {{logDir}}
 
-network.host: 10.33.67.135
-network.publish_host: 10.33.67.135
+network.host: IP
+network.publish_host: IP
 transport.tcp.port: 9300
 http.port: 9200
 
