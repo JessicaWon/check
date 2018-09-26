@@ -94,3 +94,23 @@ script.search: on
 script.engine.groovy.inline.aggs: on
 ```
 ## 如何写查询语句
+```
+"query": {
+  "filtered": {
+    "query":  { "match": { "parsedJson.proj": "yourprojectname" }},
+    "filter":{
+         "range": {
+             "@timestamp": {
+                 "gte": "1514148720461",
+                 "lte": "1544148720461"
+
+                 }
+             }
+     }
+  }
+}
+```
+```
+比如说这个操作的话实际上是对yourprojectname进行查询操作，然后过滤从1514148720461到1544148720461
+这个的时间比在timestamp中查询出来的时间的位数是多了三位的，谨记，要不然是查询不出来任何结果的
+```
